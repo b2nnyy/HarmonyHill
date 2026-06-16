@@ -51,8 +51,8 @@ export function BookingForm({
   const total = selectedStart ? getBookingTotal(selectedStart, selectedEnd!) : 0;
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-panel p-6">
-      <h3 className="text-xl font-semibold">Book Your Session</h3>
+    <div className="glass-panel rounded-3xl p-6">
+      <h3 className="text-xl font-semibold md:text-2xl">Book Your Session</h3>
       <p className="mt-1 text-sm text-text-muted">
         $45 per hour. Sessions require at least 2 hours lead time.
       </p>
@@ -65,7 +65,7 @@ export function BookingForm({
               required
               value={name}
               onChange={(event) => onChange("name", event.target.value)}
-              className="w-full rounded-lg border border-white/20 bg-white px-3 py-2"
+              className="w-full rounded-xl px-3 py-2"
               placeholder="Your name"
             />
           </label>
@@ -76,7 +76,7 @@ export function BookingForm({
               type="email"
               value={email}
               onChange={(event) => onChange("email", event.target.value)}
-              className="w-full rounded-lg border border-white/20 bg-white px-3 py-2"
+              className="w-full rounded-xl px-3 py-2"
               placeholder="you@example.com"
             />
           </label>
@@ -88,7 +88,7 @@ export function BookingForm({
             <select
               value={service}
               onChange={(event) => onServiceChange(event.target.value as ServiceType)}
-              className="w-full rounded-lg border border-white/20 bg-white px-3 py-2 capitalize"
+              className="w-full rounded-xl px-3 py-2 capitalize"
             >
               {SERVICES.map((value) => (
                 <option key={value} value={value} className="capitalize">
@@ -102,7 +102,7 @@ export function BookingForm({
             <select
               value={durationHours}
               onChange={(event) => onDurationChange(Number(event.target.value))}
-              className="w-full rounded-lg border border-white/20 bg-white px-3 py-2"
+              className="w-full rounded-xl px-3 py-2"
             >
               {Array.from({ length: 8 }, (_, index) => index + 1).map((hours) => (
                 <option key={hours} value={hours}>
@@ -118,12 +118,12 @@ export function BookingForm({
           <textarea
             value={notes}
             onChange={(event) => onChange("notes", event.target.value)}
-            className="min-h-28 w-full rounded-lg border border-white/20 bg-white px-3 py-2"
+            className="min-h-28 w-full rounded-xl px-3 py-2"
             placeholder="Share references, track count, or goals for this session."
           />
         </label>
 
-        <div className="rounded-lg bg-panel-alt p-4 text-sm">
+        <div className="rounded-xl border border-white/10 bg-panel-alt/85 p-4 text-sm">
           <p className="text-text-muted">Start: {formatDateTime(selectedStart)}</p>
           <p className="text-text-muted">End: {formatDateTime(selectedEnd)}</p>
           <p className="mt-1 font-semibold">
@@ -135,12 +135,16 @@ export function BookingForm({
         <button
           type="submit"
           disabled={isSubmitting || !selectedStart}
-          className="w-full rounded-lg bg-accent-strong px-4 py-3 font-semibold text-[#042517] disabled:cursor-not-allowed disabled:bg-white/30"
+          className="w-full rounded-xl bg-accent-strong px-4 py-3 font-semibold text-[#042517] transition hover:brightness-110 disabled:cursor-not-allowed disabled:bg-white/30"
         >
           {isSubmitting ? "Booking..." : "Book Session"}
         </button>
 
-        {statusMessage ? <p className="text-sm text-text-muted">{statusMessage}</p> : null}
+        {statusMessage ? (
+          <p className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-text-muted">
+            {statusMessage}
+          </p>
+        ) : null}
       </form>
     </div>
   );

@@ -47,14 +47,14 @@ export function BookingCalendar({
   const weekDays = getWeekDays(weekStart);
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-panel p-4">
+    <div className="glass-panel rounded-3xl p-4 md:p-5">
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-xl font-semibold">Studio Availability (24/7)</h3>
+        <h3 className="text-xl font-semibold md:text-2xl">Studio Availability (24/7)</h3>
         <p className="text-sm text-text-muted">
           Green = Available, Red = Unavailable, Gray = Under 2h
         </p>
       </div>
-      <div className="max-h-[640px] overflow-auto rounded-xl border border-white/10">
+      <div className="max-h-[640px] overflow-auto rounded-2xl border border-white/10 bg-[#0a1220]">
         <div className="booking-grid">
           <div className="booking-grid-header bg-panel-alt p-2 text-center text-xs font-semibold text-text-muted">
             Time
@@ -95,12 +95,12 @@ export function BookingCalendar({
                   slotStart.getTime() < selectedEnd.getTime();
 
                 const baseClass =
-                  "min-h-12 border border-black/10 p-1 text-[11px] transition-colors";
+                  "min-h-12 border border-black/10 p-1 text-[11px] font-medium transition-colors";
                 const stateClass = booked
-                  ? "bg-danger/35 cursor-not-allowed"
+                  ? "bg-danger/35 text-white/90 cursor-not-allowed"
                   : tooSoon
-                    ? "bg-white/10 cursor-not-allowed"
-                    : "bg-accent/45 hover:bg-accent/65 cursor-pointer";
+                    ? "bg-white/10 text-text-muted cursor-not-allowed"
+                    : "bg-accent/50 text-[#06281b] hover:bg-accent/70 cursor-pointer";
                 const selectedClass = selected
                   ? "ring-2 ring-accent-strong ring-inset"
                   : "";

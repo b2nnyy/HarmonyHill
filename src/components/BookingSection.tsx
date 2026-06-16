@@ -138,8 +138,9 @@ export function BookingSection() {
     <section id="booking" className="mx-auto w-full max-w-6xl px-6 py-16">
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold">Book a Studio Session</h2>
-          <p className="mt-2 text-text-muted">
+          <p className="text-xs uppercase tracking-[0.2em] text-accent">Booking</p>
+          <h2 className="mt-2 text-3xl font-bold md:text-4xl">Book a Studio Session</h2>
+          <p className="mt-3 text-text-muted">
             Harmony Hill is open 24/7. Select an open start time, pick duration,
             and lock in your session.
           </p>
@@ -147,7 +148,7 @@ export function BookingSection() {
         <div className="flex gap-2">
           <button
             type="button"
-            className="rounded-lg border border-white/20 px-3 py-2 text-sm hover:bg-white/5"
+            className="rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-sm transition hover:bg-white/10"
             onClick={() => {
               const previous = new Date(weekStart);
               previous.setDate(previous.getDate() - 7);
@@ -158,7 +159,7 @@ export function BookingSection() {
           </button>
           <button
             type="button"
-            className="rounded-lg border border-white/20 px-3 py-2 text-sm hover:bg-white/5"
+            className="rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-sm transition hover:bg-white/10"
             onClick={() => {
               const next = new Date(weekStart);
               next.setDate(next.getDate() + 7);

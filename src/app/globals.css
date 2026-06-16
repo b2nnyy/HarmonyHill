@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #06090f;
-  --foreground: #eff3f8;
-  --panel: #101828;
-  --panel-alt: #1b283a;
-  --text-muted: #a9b8cc;
-  --accent: #9bf5cf;
-  --accent-strong: #2ed39a;
-  --danger: #ff738a;
+  --background: #04070d;
+  --foreground: #edf1f7;
+  --panel: #0f1728;
+  --panel-alt: #17223a;
+  --text-muted: #95a6c1;
+  --accent: #8fe8c9;
+  --accent-strong: #46cf9f;
+  --danger: #ff6f88;
 }
 
 @theme inline {
@@ -28,6 +28,10 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(70, 207, 159, 0.18), transparent 36%),
+    radial-gradient(circle at 80% 22%, rgba(72, 110, 255, 0.16), transparent 34%),
+    linear-gradient(180deg, #03050a 0%, #050a13 40%, #04070d 100%);
 }
 
 a {
@@ -37,7 +41,41 @@ a {
 input,
 select,
 textarea {
-  color: #0d1522;
+  color: var(--foreground);
+  background: rgba(8, 13, 24, 0.85);
+  border: 1px solid rgba(152, 171, 201, 0.28);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(149, 166, 193, 0.8);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid rgba(143, 232, 201, 0.32);
+  outline-offset: 1px;
+}
+
+.glass-panel {
+  background: linear-gradient(
+    145deg,
+    rgba(16, 25, 42, 0.9) 0%,
+    rgba(11, 17, 30, 0.92) 100%
+  );
+  border: 1px solid rgba(142, 161, 195, 0.2);
+  box-shadow:
+    0 24px 80px rgba(4, 7, 14, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.soft-grid {
+  background-image:
+    linear-gradient(rgba(145, 164, 197, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(145, 164, 197, 0.08) 1px, transparent 1px);
+  background-size: 22px 22px;
+  background-position: center;
 }
 
 .booking-grid {
