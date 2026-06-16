@@ -1,26 +1,65 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #06090f;
+  --foreground: #eff3f8;
+  --panel: #101828;
+  --panel-alt: #1b283a;
+  --text-muted: #a9b8cc;
+  --accent: #9bf5cf;
+  --accent-strong: #2ed39a;
+  --danger: #ff738a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-panel: var(--panel);
+  --color-panel-alt: var(--panel-alt);
+  --color-text-muted: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-danger: var(--danger);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+a {
+  color: inherit;
+}
+
+input,
+select,
+textarea {
+  color: #0d1522;
+}
+
+.booking-grid {
+  display: grid;
+  grid-template-columns: 80px repeat(7, minmax(120px, 1fr));
+  gap: 2px;
+}
+
+.booking-grid-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.booking-hour-label {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+@media (max-width: 900px) {
+  .booking-grid {
+    grid-template-columns: 70px repeat(7, minmax(90px, 1fr));
+  }
 }
