@@ -1,4 +1,5 @@
 import { BookingSection } from "@/components/BookingSection";
+import { SpinningLogo } from "@/components/SpinningLogo";
 import { formatMoney, HOURLY_RATE } from "@/lib/booking";
 
 export default function Home() {
@@ -24,35 +25,39 @@ export default function Home() {
       <main>
         <section className="mx-auto w-full max-w-6xl px-6 py-20 md:py-28">
           <div className="glass-panel soft-grid relative overflow-hidden rounded-3xl p-8 md:p-12">
-            <div className="absolute -right-12 -top-12 h-44 w-44 rounded-full bg-accent/20 blur-3xl" />
-            <div className="absolute -bottom-16 left-2/5 h-48 w-48 rounded-full bg-blue-500/20 blur-3xl" />
-            <div className="relative flex flex-col gap-8">
-              <p className="text-sm uppercase tracking-[0.23em] text-accent">
-                Recording Studio • Open 24/7
-              </p>
-              <h1 className="max-w-3xl text-4xl font-bold leading-tight md:text-6xl">
-                High-end sound. Fast booking. Zero friction.
-              </h1>
-              <p className="max-w-2xl text-lg leading-relaxed text-text-muted">
-                Harmony Hill blends studio-quality recording with a modern booking
-                flow. Lock in vocal tracking, mixing, or mastering in minutes and
-                see real-time availability instantly.
-              </p>
-              <div className="flex flex-wrap gap-3">
-                <a
-                  href="#booking"
-                  className="rounded-xl bg-accent-strong px-6 py-3 font-semibold text-[#032116] transition hover:brightness-110"
-                >
-                  Book a Session
-                </a>
-                <a
-                  href="#contact"
-                  className="rounded-xl border border-white/20 bg-white/5 px-6 py-3 font-semibold transition hover:bg-white/10"
-                >
-                  Contact Studio
-                </a>
+            <div className="absolute -right-14 -top-12 h-40 w-40 rounded-full bg-accent/12 blur-3xl" />
+            <div className="relative grid items-center gap-10 lg:grid-cols-[1.2fr_0.8fr]">
+              <div className="flex flex-col gap-8">
+                <p className="text-sm uppercase tracking-[0.23em] text-accent">
+                  Recording Studio • Open 24/7
+                </p>
+                <h1 className="max-w-3xl text-4xl font-bold leading-tight md:text-6xl">
+                  High-end sound. Fast booking. Zero friction.
+                </h1>
+                <p className="max-w-2xl text-lg leading-relaxed text-text-muted">
+                  Harmony Hill blends studio-quality recording with a modern booking
+                  flow. Lock in vocal tracking, mixing, or mastering in minutes and
+                  see real-time availability instantly.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <a
+                    href="#booking"
+                    className="rounded-xl bg-accent-strong px-6 py-3 font-semibold text-[#032116] transition hover:brightness-110"
+                  >
+                    Book a Session
+                  </a>
+                  <a
+                    href="#contact"
+                    className="rounded-xl border border-white/20 bg-white/5 px-6 py-3 font-semibold transition hover:bg-white/10"
+                  >
+                    Contact Studio
+                  </a>
+                </div>
               </div>
-              <div className="grid gap-3 text-sm text-text-muted md:grid-cols-3">
+              <div className="mx-auto w-full max-w-[320px]">
+                <SpinningLogo />
+              </div>
+              <div className="grid gap-3 text-sm text-text-muted md:grid-cols-3 lg:col-span-2">
                 <div className="rounded-xl border border-white/10 bg-white/5 p-4">
                   <p className="font-semibold text-foreground">Rate</p>
                   <p>{formatMoney(HOURLY_RATE)}/hour</p>
