@@ -10,7 +10,7 @@ import {
 } from "@/lib/booking";
 
 type BookingCalendarProps = {
-  weekStart: Date;
+  monthStart: Date;
   selectedStart: Date | null;
   durationHours: number;
   events: AvailabilityEvent[];
@@ -51,10 +51,16 @@ function formatSlotTime(date: Date) {
   }).format(date);
 }
 
-function getWeekDays(weekStart: Date) {
-  return Array.from({ length: 7 }, (_, index) => {
-    const day = new Date(weekStart);
-    day.setDate(weekStart.getDate() + index);
+function getMonthDays(monthStart: Date) {
+  const nextMonth = new Date(monthStart);
+  nextMonth.setMonth(monthStart.getMonth() + 1);
+  const daysInMonth = Math.round(
+    (nextMonth.getTime() - monthStart.getTime()) / (24 * 60 * 60 * 1000),
+  );
+
+  return Array.from({ length: daysInMonth }, (_, index) => {
+    const day = new Date(monthStart);
+    day.setDate(monthStart.getDate() + index);
     day.setHours(0, 0, 0, 0);
     return day;
   });
@@ -95,53 +101,50 @@ function makeZonedDate(dayKey: string, hour: number) {
 }
 
 export function BookingCalendar({
-  weekStart,
+  monthStart,
   selectedStart,
   durationHours,
   events,
   onSelectBlock,
 }: BookingCalendarProps) {
-  const weekDays = getWeekDays(weekStart);
+  const monthDays = getMonthDays(monthStart);
   const todayKey = getDayKey(new Date());
-  const visibleWeekDays = weekDays.filter((day) => getDayKey(day) >= todayKey);
-  const initialDayKey = selectedStart
-    ? getDayKey(selectedStart)
-    : getDayKey(visibleWeekDays[0] ?? weekDays[0]);
-  const [selectedDayKey, setSelectedDayKey] = useState(initialDayKey);
+  const visibleMonthDays = monthDays.filter((day) => getDayKey(day) >= todayKey);
+  const initialDayKey = selectedStart ? getDayKey(selectedStart) : null;
+  const [selectedDayKey, setSelectedDayKey] = useState<string | null>(initialDayKey);
   const legend = [
     { label: "Available", className: "bg-[var(--slot-open)]" },
     { label: "Booked", className: "bg-danger" },
     { label: `${LEAD_TIME_HOURS}h lead`, className: "bg-[var(--slot-muted)]" },
     { label: "Selected", className: "bg-accent-warm" },
   ];
-  const effectiveSelectedDayKey = visibleWeekDays.some(
-    (day) => getDayKey(day) === selectedDayKey,
-  )
-    ? selectedDayKey
-    : getDayKey(visibleWeekDays[0] ?? weekDays[0]);
-  const selectedDay =
-    visibleWeekDays.find((day) => getDayKey(day) === effectiveSelectedDayKey) ??
-    visibleWeekDays[0] ??
-    weekDays[0];
-  const now = new Date();
-  const visibleSlots = Array.from({ length: 24 }, (_, hour) => {
-    const slotStart = makeZonedDate(effectiveSelectedDayKey, hour);
-    const slotEnd = new Date(slotStart.getTime() + 60 * 60 * 1000);
-    const booked = events.some((event) =>
-      intersects(slotStart, slotEnd, event.start, event.end),
-    );
-    const tooSoon = isWithinLeadTime(slotStart, now);
-    const selectedEnd = selectedStart
-      ? new Date(selectedStart.getTime() + durationHours * 60 * 60 * 1000)
+  const effectiveSelectedDayKey =
+    selectedDayKey && visibleMonthDays.some((day) => getDayKey(day) === selectedDayKey)
+      ? selectedDayKey
       : null;
-    const selected =
-      selectedStart &&
-      selectedEnd &&
-      slotStart.getTime() >= selectedStart.getTime() &&
-      slotStart.getTime() < selectedEnd.getTime();
+  const selectedDay =
+    visibleMonthDays.find((day) => getDayKey(day) === effectiveSelectedDayKey) ?? null;
+  const now = new Date();
+  const visibleSlots = effectiveSelectedDayKey
+    ? Array.from({ length: 24 }, (_, hour) => {
+        const slotStart = makeZonedDate(effectiveSelectedDayKey, hour);
+        const slotEnd = new Date(slotStart.getTime() + 60 * 60 * 1000);
+        const booked = events.some((event) =>
+          intersects(slotStart, slotEnd, event.start, event.end),
+        );
+        const tooSoon = isWithinLeadTime(slotStart, now);
+        const selectedEnd = selectedStart
+          ? new Date(selectedStart.getTime() + durationHours * 60 * 60 * 1000)
+          : null;
+        const selected =
+          selectedStart &&
+          selectedEnd &&
+          slotStart.getTime() >= selectedStart.getTime() &&
+          slotStart.getTime() < selectedEnd.getTime();
 
-    return { slotStart, slotEnd, booked, tooSoon, selected };
-  }).filter(({ slotStart }) => slotStart.getTime() > now.getTime());
+        return { slotStart, booked, tooSoon, selected };
+      }).filter(({ slotStart }) => slotStart.getTime() > now.getTime())
+    : [];
 
   function handleSlotClick(slotStart: Date) {
     const selectedStartKey = selectedStart ? getDayKey(selectedStart) : null;
@@ -178,7 +181,8 @@ export function BookingCalendar({
             Studio Availability
           </h3>
           <p className="mt-2 text-sm text-text-muted">
-            All times are shown in Eastern Time. Past times are hidden.
+            Pick a remaining day in the month. Available hours will appear after
+            you choose a day.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -195,108 +199,130 @@ export function BookingCalendar({
       </div>
 
       <div className="rounded-[1.5rem] border border-white/10 bg-black/25 p-3">
-        <div className="grid gap-2 sm:grid-cols-7">
-          {visibleWeekDays.map((day) => {
-            const dayKey = getDayKey(day);
-            const isSelected = dayKey === effectiveSelectedDayKey;
-            const dayEvents = events.filter((event) => getDayKey(new Date(event.start)) === dayKey);
+        {visibleMonthDays.length ? (
+          <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7">
+            {visibleMonthDays.map((day) => {
+              const dayKey = getDayKey(day);
+              const isSelected = dayKey === effectiveSelectedDayKey;
+              const dayEvents = events.filter(
+                (event) => getDayKey(new Date(event.start)) === dayKey,
+              );
 
-            return (
-              <button
-                key={dayKey}
-                type="button"
-                className={`rounded-2xl border p-3 text-left transition ${
-                  isSelected
-                    ? "border-accent-warm/70 bg-accent-warm/15 shadow-lg shadow-accent-warm/10"
-                    : "border-white/10 bg-white/[0.04] hover:border-accent/30 hover:bg-white/[0.07]"
-                }`}
-                onClick={() => setSelectedDayKey(dayKey)}
-              >
-                <span className="block text-xs font-black uppercase tracking-[0.18em] text-text-muted">
-                  {formatDayLabel(day)}
-                </span>
-                <span className="mt-1 block text-lg font-black text-foreground">
-                  {formatDayDate(day)}
-                </span>
-                <span className="mt-2 block text-[11px] font-bold text-text-muted">
-                  {dayEvents.length ? `${dayEvents.length} booked` : "Open day"}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
-        {visibleWeekDays.length ? (
-          <div className="mt-4 rounded-[1.25rem] border border-white/10 bg-[#060a11]/90 p-4">
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-accent">
-                {formatFullDay(selectedDay)}
-              </p>
-              <h4 className="mt-1 text-xl font-black tracking-[-0.03em]">
-                Choose your hours
-              </h4>
-              <p className="mt-1 text-sm text-text-muted">
-                Click a start time, then click a later hour to extend the block.
-              </p>
-            </div>
-            <p className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-bold text-text-muted">
-              Eastern Time
-            </p>
-          </div>
-
-          {visibleSlots.length ? (
-            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-              {visibleSlots.map(({ slotStart, booked, tooSoon, selected }) => {
-                const stateClass = booked
-                  ? "slot-booked"
-                  : tooSoon
-                    ? "slot-soon"
-                    : "slot-available";
-                const selectedClass = selected && !booked && !tooSoon ? "slot-selected" : "";
-                const label = booked ? "Booked" : tooSoon ? `${LEAD_TIME_HOURS}h lead time` : "Available";
-
-                return (
-                  <button
-                    key={slotStart.toISOString()}
-                    type="button"
-                    className={`calendar-slot calendar-slot-large ${stateClass} ${selectedClass}`}
-                    disabled={booked || tooSoon}
-                    onClick={() => handleSlotClick(slotStart)}
-                    aria-label={`${label} at ${formatSlotTime(slotStart)} on ${formatFullDay(selectedDay)}`}
-                    title={
-                      booked
-                        ? "Unavailable - booked"
-                        : tooSoon
-                          ? `Unavailable - must book ${LEAD_TIME_HOURS} hours in advance`
-                          : "Available"
-                    }
-                  >
-                    <span className="block text-lg font-black">{formatSlotTime(slotStart)}</span>
-                    <span className="mt-1 block text-xs font-bold opacity-80">
-                      {selected ? "Selected" : label}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 text-center">
-              <p className="font-black text-foreground">No remaining times today</p>
-              <p className="mt-2 text-sm text-text-muted">
-                Pick another day to see future availability.
-              </p>
-            </div>
-          )}
+              return (
+                <button
+                  key={dayKey}
+                  type="button"
+                  className={`rounded-2xl border p-3 text-left transition ${
+                    isSelected
+                      ? "border-accent-warm/70 bg-accent-warm/15 shadow-lg shadow-accent-warm/10"
+                      : "border-white/10 bg-white/[0.04] hover:border-accent/30 hover:bg-white/[0.07]"
+                  }`}
+                  onClick={() => setSelectedDayKey(dayKey)}
+                >
+                  <span className="block text-xs font-black uppercase tracking-[0.18em] text-text-muted">
+                    {formatDayLabel(day)}
+                  </span>
+                  <span className="mt-1 block text-lg font-black text-foreground">
+                    {formatDayDate(day)}
+                  </span>
+                  <span className="mt-2 block text-[11px] font-bold text-text-muted">
+                    {dayEvents.length ? `${dayEvents.length} booked` : "Open day"}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         ) : (
-          <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.04] p-6 text-center">
-            <p className="font-black text-foreground">No future days in this week</p>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 text-center">
+            <p className="font-black text-foreground">No future days in this month</p>
             <p className="mt-2 text-sm text-text-muted">
-              Move to next week to see available session times.
+              Move to next month to see available session times.
             </p>
           </div>
         )}
+
+        {visibleMonthDays.length ? (
+          <div className="mt-4 rounded-[1.25rem] border border-white/10 bg-[#060a11]/90 p-4">
+            {selectedDay ? (
+              <>
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-black uppercase tracking-[0.18em] text-accent">
+                      {formatFullDay(selectedDay)}
+                    </p>
+                    <h4 className="mt-1 text-xl font-black tracking-[-0.03em]">
+                      Choose your hours
+                    </h4>
+                    <p className="mt-1 text-sm text-text-muted">
+                      Click a start time, then click a later hour to extend the block.
+                    </p>
+                  </div>
+                  <p className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-bold text-text-muted">
+                    Eastern Time
+                  </p>
+                </div>
+
+                {visibleSlots.length ? (
+                  <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                    {visibleSlots.map(({ slotStart, booked, tooSoon, selected }) => {
+                      const stateClass = booked
+                        ? "slot-booked"
+                        : tooSoon
+                          ? "slot-soon"
+                          : "slot-available";
+                      const selectedClass = selected && !booked && !tooSoon ? "slot-selected" : "";
+                      const label = booked
+                        ? "Booked"
+                        : tooSoon
+                          ? `${LEAD_TIME_HOURS}h lead time`
+                          : "Available";
+
+                      return (
+                        <button
+                          key={slotStart.toISOString()}
+                          type="button"
+                          className={`calendar-slot calendar-slot-large ${stateClass} ${selectedClass}`}
+                          disabled={booked || tooSoon}
+                          onClick={() => handleSlotClick(slotStart)}
+                          aria-label={`${label} at ${formatSlotTime(slotStart)} on ${formatFullDay(selectedDay)}`}
+                          title={
+                            booked
+                              ? "Unavailable - booked"
+                              : tooSoon
+                                ? `Unavailable - must book ${LEAD_TIME_HOURS} hours in advance`
+                                : "Available"
+                          }
+                        >
+                          <span className="block text-lg font-black">{formatSlotTime(slotStart)}</span>
+                          <span className="mt-1 block text-xs font-bold opacity-80">
+                            {selected ? "Selected" : label}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 text-center">
+                    <p className="font-black text-foreground">No remaining times today</p>
+                    <p className="mt-2 text-sm text-text-muted">
+                      Pick another day to see future availability.
+                    </p>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 text-center">
+                <p className="font-black text-foreground">
+                  Select a day to see available hours
+                </p>
+                <p className="mt-2 text-sm text-text-muted">
+                  Choose any remaining day in the month above, then open times
+                  will appear here.
+                </p>
+              </div>
+            )}
+          </div>
+        ) : null}
       </div>
     </div>
   );

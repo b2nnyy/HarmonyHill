@@ -16,26 +16,36 @@ import {
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BOOKING_API_URL ?? "";
 
-function getStartOfWeek(date: Date) {
-  const weekStart = new Date(date);
-  const day = weekStart.getDay();
-  weekStart.setDate(weekStart.getDate() - day);
-  weekStart.setHours(0, 0, 0, 0);
-  return weekStart;
+function getStartOfMonth(date: Date) {
+  const monthStart = new Date(date);
+  monthStart.setDate(1);
+  monthStart.setHours(0, 0, 0, 0);
+  return monthStart;
 }
 
-function formatWeekRange(start: Date, end: Date) {
-  const formatter = new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
+function formatMonthLabel(start: Date) {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    year: "numeric",
+  }).format(start);
+}
+
+function getMonthEnd(start: Date) {
+  const end = new Date(start);
+  end.setMonth(start.getMonth() + 1);
+  return end;
+}
+
+function isSameMonth(first: Date, second: Date) {
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    year: "numeric",
+    month: "2-digit",
   });
-  const visibleEnd = new Date(end);
-  visibleEnd.setDate(visibleEnd.getDate() - 1);
-  return `${formatter.format(start)} - ${formatter.format(visibleEnd)}`;
+  return formatter.format(first) === formatter.format(second);
 }
 
 export function BookingSection() {
-  const [weekStart, setWeekStart] = useState<Date>(() => getStartOfWeek(new Date()));
+  const [monthStart, setMonthStart] = useState<Date>(() => getStartOfMonth(new Date()));
   const [events, setEvents] = useState<AvailabilityEvent[]>([]);
   const [selectedStart, setSelectedStart] = useState<Date | null>(null);
   const [durationHours, setDurationHours] = useState(MIN_BOOKING_HOURS);
@@ -54,13 +64,9 @@ export function BookingSection() {
     return new Date(selectedStart.getTime() + durationHours * 60 * 60 * 1000);
   }, [selectedStart, durationHours]);
 
-  const weekEnd = useMemo(() => {
-    const end = new Date(weekStart);
-    end.setDate(weekStart.getDate() + 7);
-    return end;
-  }, [weekStart]);
-  const currentWeekStart = getStartOfWeek(new Date());
-  const canGoPrevious = weekStart.getTime() > currentWeekStart.getTime();
+  const monthEnd = useMemo(() => getMonthEnd(monthStart), [monthStart]);
+  const currentMonthStart = getStartOfMonth(new Date());
+  const canGoPrevious = monthStart.getTime() > currentMonthStart.getTime();
 
   const loadAvailability = useCallback(async () => {
     if (!API_BASE_URL) {
@@ -74,7 +80,7 @@ export function BookingSection() {
     setLoading(true);
     setStatusMessage(null);
     try {
-      const result = await fetchAvailability(API_BASE_URL, weekStart, weekEnd);
+      const result = await fetchAvailability(API_BASE_URL, monthStart, monthEnd);
       setEvents(result);
     } catch (error) {
       setStatusMessage(
@@ -86,7 +92,7 @@ export function BookingSection() {
     } finally {
       setLoading(false);
     }
-  }, [weekStart, weekEnd]);
+  }, [monthStart, monthEnd]);
 
   // Availability is sourced from external API and refreshed on week changes.
   /* eslint-disable react-hooks/set-state-in-effect */
@@ -167,23 +173,29 @@ export function BookingSection() {
             className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
             onClick={() => {
               if (!canGoPrevious) return;
-              const previous = new Date(weekStart);
-              previous.setDate(previous.getDate() - 7);
-              setWeekStart(previous);
+              const previous = new Date(monthStart);
+              previous.setMonth(previous.getMonth() - 1);
+              setMonthStart(previous);
+              if (selectedStart && !isSameMonth(selectedStart, previous)) {
+                setSelectedStart(null);
+              }
             }}
           >
             Prev
           </button>
           <p className="min-w-32 px-3 text-center text-sm font-black text-foreground">
-            {formatWeekRange(weekStart, weekEnd)}
+            {formatMonthLabel(monthStart)}
           </p>
           <button
             type="button"
             className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold transition hover:bg-white/10"
             onClick={() => {
-              const next = new Date(weekStart);
-              next.setDate(next.getDate() + 7);
-              setWeekStart(next);
+              const next = new Date(monthStart);
+              next.setMonth(next.getMonth() + 1);
+              setMonthStart(next);
+              if (selectedStart && !isSameMonth(selectedStart, next)) {
+                setSelectedStart(null);
+              }
             }}
           >
             Next
@@ -200,7 +212,7 @@ export function BookingSection() {
 
       <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
         <BookingCalendar
-          weekStart={weekStart}
+          monthStart={monthStart}
           events={events}
           selectedStart={selectedStart}
           durationHours={durationHours}
