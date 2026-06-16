@@ -10,7 +10,7 @@ Landing + booking site for Harmony Hill studio.
 - 2-hour lead-time booking rule
 - $45/hour session pricing
 - Google Apps Script + Google Calendar API backend (free)
-- GitHub Pages deployment with custom domain (`hharmonlyhill.com`)
+- GitHub Pages deployment with custom domain (`hharmonyhill.com`)
 
 ## Local Setup
 
@@ -56,7 +56,7 @@ This repo includes `.github/workflows/deploy.yml` for Pages deployment.
 
 `CNAME` is configured for:
 
-- `hharmonlyhill.com`
+- `hharmonyhill.com`
 
 In Cloudflare DNS, point your domain to GitHub Pages (typical setup):
 
@@ -66,4 +66,4 @@ In Cloudflare DNS, point your domain to GitHub Pages (typical setup):
 - `A` record: `@` -> `185.199.111.153`
 - `CNAME` record: `www` -> `<your-github-username>.github.io`
 
-Then in GitHub Pages settings, set the custom domain to `hharmonlyhill.com`.
+Then in GitHub Pages settings, set the custom domain to `hharmonyhill.com`.

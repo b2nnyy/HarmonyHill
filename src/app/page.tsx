@@ -234,7 +234,7 @@ export default function Home() {
                   className="min-h-32 rounded-2xl px-4 py-3 md:col-span-2"
                 />
                 <a
-                  href="mailto:bookings@hharmonlyhill.com?subject=Harmony%20Hill%20Session%20Inquiry"
+                  href="mailto:bookings@hharmonyhill.com?subject=Harmony%20Hill%20Session%20Inquiry"
                   className="premium-button rounded-2xl bg-accent-strong px-5 py-3 text-center font-black text-[#03130d] transition hover:-translate-y-0.5 hover:brightness-110 md:w-fit"
                 >
                   Email the Studio
