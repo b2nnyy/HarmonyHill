@@ -154,23 +154,26 @@ export function BookingSection() {
   };
 
   return (
-    <section id="booking" className="mx-auto w-full max-w-6xl px-6 py-16">
-      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <div>
+    <section id="booking" className="mx-auto w-full max-w-6xl px-6 py-24">
+      <div className="hairline mb-16" />
+      <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
+        <div className="max-w-2xl">
           <p className="section-kicker">Booking</p>
-          <h2 className="mt-3 text-4xl font-black tracking-[-0.05em] md:text-5xl">
-            Book a Studio Session
+          <h2 className="font-display mt-4 text-4xl font-semibold tracking-[-0.02em] md:text-5xl">
+            Reserve your
+            <span className="text-foil"> studio time.</span>
           </h2>
-          <p className="mt-4 max-w-2xl leading-8 text-text-muted">
-            Harmony Hill is open 24/7. Select an open start time, pick duration,
-            and lock in your session.
+          <p className="mt-5 max-w-xl leading-8 text-text-muted">
+            Harmony Hill is open 24/7. Choose an open day, select your hours, and
+            lock in the session.
           </p>
         </div>
-        <div className="glass-panel flex flex-wrap items-center gap-2 rounded-2xl p-2">
+        <div className="panel-quiet flex flex-wrap items-center gap-1 rounded-full p-1.5">
           <button
             type="button"
             disabled={!canGoPrevious}
-            className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
+            aria-label="Previous month"
+            className="grid size-9 place-items-center rounded-full border border-white/10 bg-white/[0.03] text-sm font-bold transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-30"
             onClick={() => {
               if (!canGoPrevious) return;
               const previous = new Date(monthStart);
@@ -181,14 +184,15 @@ export function BookingSection() {
               }
             }}
           >
-            Prev
+            &#8592;
           </button>
-          <p className="min-w-32 px-3 text-center text-sm font-black text-foreground">
+          <p className="font-display min-w-40 px-3 text-center text-base font-semibold text-foreground">
             {formatMonthLabel(monthStart)}
           </p>
           <button
             type="button"
-            className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold transition hover:bg-white/10"
+            aria-label="Next month"
+            className="grid size-9 place-items-center rounded-full border border-white/10 bg-white/[0.03] text-sm font-bold transition hover:bg-white/10"
             onClick={() => {
               const next = new Date(monthStart);
               next.setMonth(next.getMonth() + 1);
@@ -198,14 +202,14 @@ export function BookingSection() {
               }
             }}
           >
-            Next
+            &#8594;
           </button>
         </div>
       </div>
 
       {loading ? (
-        <div className="mb-4 inline-flex items-center gap-3 rounded-full border border-accent/20 bg-accent/10 px-4 py-2 text-sm font-bold text-accent">
-          <span className="size-2 animate-pulse rounded-full bg-accent" />
+        <div className="mb-4 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 text-sm font-semibold text-text-muted">
+          <span className="size-2 animate-pulse rounded-full bg-white" />
           Loading live availability
         </div>
       ) : null}

@@ -173,23 +173,23 @@ export function BookingCalendar({
   }
 
   return (
-    <div className="glass-panel rounded-3xl p-4 md:p-6">
+    <div className="glass-panel p-4 md:p-6">
       <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="section-kicker">Live Calendar</p>
-          <h3 className="mt-2 text-2xl font-black tracking-[-0.04em]">
-            Studio Availability
+          <h3 className="font-display mt-3 text-2xl font-semibold tracking-[-0.01em]">
+            Studio availability
           </h3>
           <p className="mt-2 text-sm text-text-muted">
-            Pick a remaining day in the month. Available hours will appear after
-            you choose a day.
+            Pick a remaining day in the month. Available hours appear once you
+            choose a day.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
           {legend.map((item) => (
             <span
               key={item.label}
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-bold text-text-muted"
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-semibold text-text-muted"
             >
               <span className={`size-2.5 rounded-full ${item.className}`} />
               {item.label}
@@ -198,7 +198,7 @@ export function BookingCalendar({
         </div>
       </div>
 
-      <div className="rounded-[1.5rem] border border-white/10 bg-black/25 p-3">
+      <div className="rounded-[1.5rem] border border-white/10 bg-black/30 p-3">
         {visibleMonthDays.length ? (
           <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7">
             {visibleMonthDays.map((day) => {
@@ -212,20 +212,20 @@ export function BookingCalendar({
                 <button
                   key={dayKey}
                   type="button"
-                  className={`rounded-2xl border p-3 text-left transition ${
+                  className={`edge-hover rounded-2xl border p-3 text-left ${
                     isSelected
-                      ? "border-accent-warm/70 bg-accent-warm/15 shadow-lg shadow-accent-warm/10"
-                      : "border-white/10 bg-white/[0.04] hover:border-accent/30 hover:bg-white/[0.07]"
+                      ? "border-white/70 bg-white/[0.1] shadow-[0_0_0_1px_rgba(255,255,255,0.25)]"
+                      : "border-white/10 bg-white/[0.03] hover:border-white/30 hover:bg-white/[0.06]"
                   }`}
                   onClick={() => setSelectedDayKey(dayKey)}
                 >
-                  <span className="block text-xs font-black uppercase tracking-[0.18em] text-text-muted">
+                  <span className="block text-xs font-semibold uppercase tracking-[0.2em] text-text-faint">
                     {formatDayLabel(day)}
                   </span>
-                  <span className="mt-1 block text-lg font-black text-foreground">
+                  <span className="font-display mt-1 block text-lg font-semibold text-foreground">
                     {formatDayDate(day)}
                   </span>
-                  <span className="mt-2 block text-[11px] font-bold text-text-muted">
+                  <span className="mt-2 block text-[11px] font-semibold text-text-muted">
                     {dayEvents.length ? `${dayEvents.length} booked` : "Open day"}
                   </span>
                 </button>
@@ -233,8 +233,8 @@ export function BookingCalendar({
             })}
           </div>
         ) : (
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 text-center">
-            <p className="font-black text-foreground">No future days in this month</p>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-10 text-center">
+            <p className="font-display text-lg font-semibold text-foreground">No future days in this month</p>
             <p className="mt-2 text-sm text-text-muted">
               Move to next month to see available session times.
             </p>
@@ -242,22 +242,22 @@ export function BookingCalendar({
         )}
 
         {visibleMonthDays.length ? (
-          <div className="mt-4 rounded-[1.25rem] border border-white/10 bg-[#060a11]/90 p-4">
+          <div className="mt-4 rounded-[1.25rem] border border-white/10 bg-black/40 p-4">
             {selectedDay ? (
               <>
                 <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                   <div>
-                    <p className="text-xs font-black uppercase tracking-[0.18em] text-accent">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-text-faint">
                       {formatFullDay(selectedDay)}
                     </p>
-                    <h4 className="mt-1 text-xl font-black tracking-[-0.03em]">
+                    <h4 className="font-display mt-1 text-xl font-semibold tracking-[-0.01em]">
                       Choose your hours
                     </h4>
                     <p className="mt-1 text-sm text-text-muted">
                       Click a start time, then click a later hour to extend the block.
                     </p>
                   </div>
-                  <p className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-bold text-text-muted">
+                  <p className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-semibold text-text-muted">
                     Eastern Time
                   </p>
                 </div>
@@ -293,8 +293,8 @@ export function BookingCalendar({
                                 : "Available"
                           }
                         >
-                          <span className="block text-lg font-black">{formatSlotTime(slotStart)}</span>
-                          <span className="mt-1 block text-xs font-bold opacity-80">
+                          <span className="font-display block text-lg font-semibold">{formatSlotTime(slotStart)}</span>
+                          <span className="mt-1 block text-xs font-semibold opacity-80">
                             {selected ? "Selected" : label}
                           </span>
                         </button>
@@ -302,8 +302,8 @@ export function BookingCalendar({
                     })}
                   </div>
                 ) : (
-                  <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 text-center">
-                    <p className="font-black text-foreground">No remaining times today</p>
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center">
+                    <p className="font-semibold text-foreground">No remaining times today</p>
                     <p className="mt-2 text-sm text-text-muted">
                       Pick another day to see future availability.
                     </p>
@@ -311,8 +311,8 @@ export function BookingCalendar({
                 )}
               </>
             ) : (
-              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 text-center">
-                <p className="font-black text-foreground">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-10 text-center">
+                <p className="font-display text-lg font-semibold text-foreground">
                   Select a day to see available hours
                 </p>
                 <p className="mt-2 text-sm text-text-muted">

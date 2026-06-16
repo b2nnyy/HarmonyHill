@@ -70,12 +70,15 @@ export function BookingForm({
       statusMessage.toLowerCase().includes("advance"));
 
   return (
-    <div className="glass-panel rounded-[1.75rem] p-6">
+    <div className="glass-panel p-6 md:p-7">
       <p className="section-kicker">Session Request</p>
-      <h3 className="mt-2 text-2xl font-black tracking-[-0.04em]">Book Your Session</h3>
+      <h3 className="font-display mt-3 text-2xl font-semibold tracking-[-0.01em]">
+        Book your session
+      </h3>
       <p className="mt-2 text-sm leading-6 text-text-muted">
-        $45 per hour. Select your hours on the calendar or adjust the session length
-        here. Book at least {LEAD_TIME_HOURS} hours before the session starts.
+        {formatMoney(HOURLY_RATE)} per hour. Select your hours on the calendar or
+        adjust the session length here. Book at least {LEAD_TIME_HOURS} hours before
+        the session starts.
       </p>
 
       <form className="mt-6 space-y-4" onSubmit={onSubmit}>
@@ -160,24 +163,24 @@ export function BookingForm({
           />
         </label>
 
-        <div className="rounded-2xl border border-accent-warm/20 bg-black/25 p-5">
+        <div className="panel-quiet rounded-2xl p-5">
           <div className="space-y-2 text-sm">
             <p className="text-text-muted">
-              Start: <span className="font-bold text-foreground">{formatDateTime(selectedStart)}</span>
+              Start: <span className="font-semibold text-foreground">{formatDateTime(selectedStart)}</span>
             </p>
             <p className="text-text-muted">
-              End: <span className="font-bold text-foreground">{formatDateTime(selectedEnd)}</span>
+              End: <span className="font-semibold text-foreground">{formatDateTime(selectedEnd)}</span>
             </p>
           </div>
           <div className="mt-4 border-t border-white/10 pt-4">
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-text-muted">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-text-faint">
               Estimated Total
             </p>
-            <p className="mt-1 text-4xl font-black tracking-[-0.05em] text-accent-warm">
+            <p className="font-display text-foil mt-1 text-4xl font-semibold tracking-[-0.02em]">
               {formatMoney(total)}
             </p>
-            <p className="text-xs text-text-muted">
-              {durationHours} hour{durationHours > 1 ? "s" : ""} x{" "}
+            <p className="mt-1 text-xs text-text-muted">
+              {durationHours} hour{durationHours > 1 ? "s" : ""} &times;{" "}
               {formatMoney(HOURLY_RATE)}/hour
             </p>
           </div>
@@ -186,16 +189,16 @@ export function BookingForm({
         <button
           type="submit"
           disabled={isSubmitting || !selectedStart}
-          className="premium-button w-full rounded-2xl bg-accent-strong px-4 py-3.5 font-black text-[#03130d] transition hover:-translate-y-0.5 hover:brightness-110 disabled:cursor-not-allowed disabled:bg-white/20 disabled:text-white/45 disabled:shadow-none"
+          className="btn-foil w-full"
         >
           {isSubmitting ? "Booking..." : "Book Session"}
         </button>
 
         {statusMessage ? (
           <p
-            className={`rounded-2xl border px-4 py-3 text-sm font-bold ${
+            className={`rounded-2xl border px-4 py-3 text-sm font-semibold ${
               isSuccess
-                ? "border-accent/25 bg-accent/10 text-accent"
+                ? "border-white/25 bg-white/10 text-foreground"
                 : isWarning
                   ? "border-danger/30 bg-danger/10 text-red-100"
                   : "border-white/10 bg-white/5 text-text-muted"

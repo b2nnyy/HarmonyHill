@@ -1,5 +1,8 @@
+import Image from "next/image";
 import { BookingSection } from "@/components/BookingSection";
-import { SpinningLogo } from "@/components/SpinningLogo";
+import { LogoMark } from "@/components/LogoMark";
+import { MotifOrnament } from "@/components/MotifOrnament";
+import { Reveal } from "@/components/Reveal";
 import { formatMoney, HOURLY_RATE } from "@/lib/booking";
 
 const services = [
@@ -19,32 +22,57 @@ const services = [
     title: "Mastering",
     eyebrow: "Finish",
     description:
-      "Final level, tone, and translation checks for a polished streaming-ready release.",
+      "Final level, tone, and translation checks for a polished, streaming-ready release.",
   },
 ];
 
 const steps = [
-  "Pick an open time from the live studio calendar.",
-  "Choose service, duration, and add project notes.",
-  "Submit your request and the session locks into the calendar.",
+  {
+    title: "Choose a time",
+    description: "Pick an open day, then an open hour from the live studio calendar.",
+  },
+  {
+    title: "Set the details",
+    description: "Choose your service, set the session length, and add project notes.",
+  },
+  {
+    title: "Lock it in",
+    description: "Send your request and the session reserves itself on the calendar.",
+  },
+];
+
+const marqueeItems = [
+  "Vocal Tracking",
+  "Mixing",
+  "Mastering",
+  "Open 24 / 7",
+  "Eastern Time",
+  `${formatMoney(HOURLY_RATE)} / Hour`,
+  "Book 2h Ahead",
 ];
 
 const instagramUrl = "https://www.instagram.com/hharmonyhill/";
 
 export default function Home() {
   return (
-    <div className="min-h-screen overflow-hidden bg-background text-foreground">
-      <header className="sticky top-0 z-20 border-b border-white/10 bg-black/85 backdrop-blur-xl">
+    <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
+      <header className="sticky top-0 z-30 border-b border-white/10 bg-black/70 backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
-          <a href="#" className="group flex items-center gap-3">
-            <span className="grid size-9 place-items-center rounded-full border border-white/25 bg-white text-xs font-black text-black">
-              HH
+          <a href="#top" className="group flex items-center gap-3">
+            <span className="relative grid size-9 place-items-center">
+              <Image
+                src="/assets/harmony-hill-logo-clean.png"
+                alt="Harmony Hill"
+                width={40}
+                height={40}
+                className="size-9 object-contain brightness-150"
+              />
             </span>
-            <span className="text-sm font-semibold uppercase tracking-[0.22em] group-hover:text-white">
+            <span className="font-display text-base font-semibold tracking-[0.02em]">
               Harmony Hill
             </span>
           </a>
-          <nav className="hidden gap-6 text-sm text-text-muted md:flex">
+          <nav className="hidden items-center gap-8 text-sm text-text-muted md:flex">
             <a href="#services" className="transition hover:text-foreground">
               Services
             </a>
@@ -63,182 +91,236 @@ export default function Home() {
               Instagram
             </a>
           </nav>
-          <a
-            href="#booking"
-            className="rounded-full border border-white/25 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-black transition hover:bg-black hover:text-white"
-          >
-            Book
+          <a href="#booking" className="btn-foil px-5 py-2.5 text-xs uppercase tracking-[0.16em]">
+            Book a Session
           </a>
         </div>
       </header>
 
-      <main>
-        <section className="mx-auto flex w-full max-w-5xl flex-col items-center px-6 py-14 text-center md:py-20">
-          <SpinningLogo />
-          <div className="mt-8 flex flex-wrap justify-center gap-2">
-            <span className="rounded-full border border-white/20 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-white">
-              Recording Studio
-            </span>
-            <span className="rounded-full border border-white/20 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-white">
-              {formatMoney(HOURLY_RATE)}/hr
-            </span>
-            <span className="rounded-full border border-white/20 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-white">
-              Open 24/7
-            </span>
-          </div>
-          <h1 className="mt-8 max-w-4xl text-5xl font-black leading-[0.95] tracking-[-0.06em] md:text-7xl">
-            Harmony Hill
-          </h1>
-          <p className="mt-5 max-w-2xl text-lg leading-8 text-text-muted">
-            A simple booking site for vocal tracking, mixing, and mastering.
-            Choose a day, pick a time in Eastern Time, and book 1 to 12 hours.
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <a
-              href="#booking"
-              className="rounded-full bg-white px-6 py-3 font-black text-black transition hover:bg-neutral-300"
-            >
-              Book a Session
-            </a>
-            <a
-              href="#services"
-              className="rounded-full border border-white/25 px-6 py-3 font-bold transition hover:bg-white hover:text-black"
-            >
-              View Services
-            </a>
-            <a
-              href={instagramUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full border border-white/25 px-6 py-3 font-bold transition hover:bg-white hover:text-black"
-            >
-              Instagram
-            </a>
-          </div>
-          <div className="mt-10 grid w-full gap-3 text-sm text-text-muted sm:grid-cols-3">
-            <div className="rounded-2xl border border-white/10 p-4">
-              <p className="text-xl font-black text-foreground">24/7</p>
-              <p>Availability</p>
+      <main id="top">
+        {/* ---------- Hero ---------- */}
+        <section className="relative isolate mx-auto flex w-full max-w-5xl flex-col items-center overflow-hidden px-6 pb-20 pt-16 text-center md:pt-24">
+          <MotifOrnament
+            className="left-1/2 top-[-8%] -translate-x-1/2"
+            size={620}
+          />
+          <Reveal className="relative z-10 flex flex-col items-center">
+            <p className="section-kicker mb-8">Recording Studio</p>
+            <LogoMark priority />
+            <h1 className="font-display text-foil mt-10 text-6xl font-semibold leading-[0.92] tracking-[-0.02em] md:text-8xl">
+              Harmony Hill
+            </h1>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-text-muted">
+              A recording studio for vocal tracking, mixing, and mastering.
+              Pick a day, choose your hours in Eastern Time, and book sessions
+              from one to twelve hours.
+            </p>
+            <div className="mt-9 flex flex-wrap justify-center gap-3">
+              <a href="#booking" className="btn-foil">
+                Book a Session
+              </a>
+              <a href="#services" className="btn-ghost">
+                Explore Services
+              </a>
             </div>
-            <div className="rounded-2xl border border-white/10 p-4">
-              <p className="text-xl font-black text-foreground">2 hr</p>
-              <p>Advance notice</p>
-            </div>
-            <div className="rounded-2xl border border-white/10 p-4">
-              <p className="text-xl font-black text-foreground">1-12</p>
-              <p>Hours per session</p>
-            </div>
-          </div>
+          </Reveal>
+
+          <Reveal
+            delay={120}
+            className="relative z-10 mt-14 grid w-full max-w-2xl grid-cols-3 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]"
+          >
+            {[
+              { stat: "24/7", label: "Availability" },
+              { stat: "2 hr", label: "Advance notice" },
+              { stat: "1–12", label: "Hours per session" },
+            ].map((item) => (
+              <div key={item.label} className="bg-black/20 px-4 py-6">
+                <p className="font-display text-3xl font-semibold text-foreground">
+                  {item.stat}
+                </p>
+                <p className="mt-1 text-xs uppercase tracking-[0.18em] text-text-faint">
+                  {item.label}
+                </p>
+              </div>
+            ))}
+          </Reveal>
         </section>
 
-        <section id="services" className="mx-auto w-full max-w-6xl px-6 py-10">
-          <div className="mb-8 text-center">
-            <p className="section-kicker">Services</p>
-            <h2 className="mx-auto mt-3 max-w-2xl text-4xl font-black tracking-[-0.04em] md:text-5xl">
-              Services
-            </h2>
-            <p className="mx-auto mt-4 max-w-xl leading-7 text-text-muted">
-              Pick the service that fits your session. Keep the setup simple and
-              get straight to the work.
-            </p>
+        {/* ---------- Marquee strip ---------- */}
+        <div className="border-y border-white/10 bg-white/[0.015] py-4">
+          <div className="marquee">
+            {[0, 1].map((dup) => (
+              <div className="marquee__track" key={dup} aria-hidden={dup === 1}>
+                {marqueeItems.map((item) => (
+                  <span key={item} className="flex items-center gap-10">
+                    <span className="marquee__item">{item}</span>
+                    <span className="marquee__dot" />
+                  </span>
+                ))}
+              </div>
+            ))}
           </div>
-          <div className="grid gap-4 md:grid-cols-3">
+        </div>
+
+        {/* ---------- Services ---------- */}
+        <section id="services" className="mx-auto w-full max-w-6xl px-6 py-24">
+          <Reveal className="mb-14 max-w-2xl">
+            <p className="section-kicker">Services</p>
+            <h2 className="font-display mt-4 text-4xl font-semibold tracking-[-0.02em] md:text-5xl">
+              Three ways to move
+              <span className="text-foil"> your sound forward.</span>
+            </h2>
+            <p className="mt-5 leading-7 text-text-muted">
+              Pick the service that fits your session. The setup stays simple so
+              you get straight to the work.
+            </p>
+          </Reveal>
+
+          <div className="grid gap-5 md:grid-cols-3">
             {services.map((service, index) => (
-              <article
-                key={service.title}
-                className="glass-panel group relative overflow-hidden rounded-[1.75rem] p-6 text-center transition hover:-translate-y-1"
-              >
-                <p className="text-xs font-black uppercase tracking-[0.22em] text-text-muted">
-                  0{index + 1} / {service.eyebrow}
-                </p>
-                <h3 className="mt-8 text-2xl font-black tracking-[-0.03em]">
-                  {service.title}
-                </h3>
-                <p className="mt-4 text-sm leading-7 text-text-muted">
-                  {service.description}
-                </p>
-              </article>
+              <Reveal key={service.title} delay={index * 90}>
+                <article className="glass-panel edge-hover group relative h-full overflow-hidden p-7">
+                  <MotifOrnament
+                    className="right-[-30%] top-[-30%] opacity-[0.04]"
+                    size={260}
+                  />
+                  <div className="relative z-10 flex items-baseline justify-between">
+                    <span className="font-display text-5xl font-light text-white/15 transition group-hover:text-white/30">
+                      0{index + 1}
+                    </span>
+                    <span className="section-kicker">{service.eyebrow}</span>
+                  </div>
+                  <h3 className="font-display relative z-10 mt-10 text-2xl font-semibold tracking-[-0.01em]">
+                    {service.title}
+                  </h3>
+                  <p className="relative z-10 mt-3 text-sm leading-7 text-text-muted">
+                    {service.description}
+                  </p>
+                </article>
+              </Reveal>
             ))}
           </div>
         </section>
 
-        <section className="mx-auto w-full max-w-6xl px-6 py-8">
-          <div className="glass-panel rounded-[1.75rem] p-6 text-center md:p-8">
-            <div className="mb-5">
+        {/* ---------- How booking works ---------- */}
+        <section className="mx-auto w-full max-w-6xl px-6 pb-24">
+          <div className="hairline mb-16" />
+          <Reveal className="mb-12 flex flex-wrap items-end justify-between gap-6">
+            <div className="max-w-xl">
               <p className="section-kicker">How Booking Works</p>
-              <p className="mt-2 text-sm text-text-muted">Choose a time and send your request.</p>
+              <h2 className="font-display mt-4 text-4xl font-semibold tracking-[-0.02em] md:text-5xl">
+                Three steps, start to studio.
+              </h2>
             </div>
-            <div className="grid gap-4 md:grid-cols-3">
-              {steps.map((text, index) => (
-                <article key={text} className="rounded-2xl border border-white/10 p-5">
-                  <div className="mx-auto mb-5 grid size-10 place-items-center rounded-full bg-white text-sm font-black text-black">
-                    {index + 1}
-                  </div>
-                  <p className="text-sm leading-7 text-text-muted">{text}</p>
-                </article>
-              ))}
-            </div>
+            <p className="max-w-sm text-sm leading-7 text-text-muted">
+              The calendar is live, so the times you see are the times that are
+              truly open. No back-and-forth.
+            </p>
+          </Reveal>
+
+          <div className="grid gap-px overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02] md:grid-cols-3">
+            {steps.map((step, index) => (
+              <Reveal key={step.title} delay={index * 90} className="bg-black/20">
+                <div className="h-full p-8">
+                  <span className="font-display block text-6xl font-light text-foil">
+                    0{index + 1}
+                  </span>
+                  <h3 className="mt-6 text-lg font-semibold">{step.title}</h3>
+                  <p className="mt-2 text-sm leading-7 text-text-muted">
+                    {step.description}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </section>
 
         <BookingSection />
 
-        <section id="contact" className="mx-auto w-full max-w-6xl px-6 py-16">
-          <div className="glass-panel rounded-[2rem] p-7 md:p-10">
-            <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
-              <div>
-                <p className="section-kicker">Contact</p>
-                <h2 className="mt-3 text-4xl font-black tracking-[-0.05em] md:text-5xl">
-                  Contact
-                </h2>
-                <p className="mt-4 leading-8 text-text-muted">
-                  Share your project scope, target timeline, references, and
-                  preferred service. For updates and studio content, follow
-                  @hharmonyhill on Instagram.
-                </p>
-                <a
-                  href={instagramUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-5 inline-flex rounded-full border border-white/25 px-5 py-2 text-sm font-bold transition hover:bg-white hover:text-black"
-                >
-                  @hharmonyhill
-                </a>
+        {/* ---------- Contact ---------- */}
+        <section id="contact" className="mx-auto w-full max-w-6xl px-6 py-24">
+          <Reveal>
+            <div className="glass-panel relative overflow-hidden p-8 md:p-12">
+              <MotifOrnament
+                className="bottom-[-35%] right-[-12%] opacity-[0.05]"
+                size={460}
+              />
+              <div className="relative z-10 grid gap-10 lg:grid-cols-[0.85fr_1.15fr]">
+                <div>
+                  <p className="section-kicker">Contact</p>
+                  <h2 className="font-display mt-4 text-4xl font-semibold tracking-[-0.02em] md:text-5xl">
+                    Let&apos;s make
+                    <span className="text-foil"> something.</span>
+                  </h2>
+                  <p className="mt-5 leading-8 text-text-muted">
+                    Share your project scope, timeline, references, and preferred
+                    service. For studio updates and behind-the-scenes, follow
+                    @hharmonyhill on Instagram.
+                  </p>
+                  <a
+                    href={instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-ghost mt-7 text-sm"
+                  >
+                    @hharmonyhill
+                  </a>
+                </div>
+                <form className="grid gap-4 md:grid-cols-2">
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Name"
+                    className="px-4 py-3.5"
+                  />
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    className="px-4 py-3.5"
+                  />
+                  <textarea
+                    name="message"
+                    placeholder="Tell me about your project..."
+                    className="min-h-36 px-4 py-3.5 md:col-span-2"
+                  />
+                  <a
+                    href="mailto:bookings@hharmonyhill.com?subject=Harmony%20Hill%20Session%20Inquiry"
+                    className="btn-foil md:col-span-2 md:w-fit"
+                  >
+                    Email the Studio
+                  </a>
+                </form>
               </div>
-              <form className="grid gap-4 md:grid-cols-2">
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Name"
-                  className="rounded-2xl px-4 py-3"
-                />
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  className="rounded-2xl px-4 py-3"
-                />
-                <textarea
-                  name="message"
-                  placeholder="Tell me about your project..."
-                  className="min-h-32 rounded-2xl px-4 py-3 md:col-span-2"
-                />
-                <a
-                  href="mailto:bookings@hharmonyhill.com?subject=Harmony%20Hill%20Session%20Inquiry"
-                  className="rounded-2xl bg-white px-5 py-3 text-center font-black text-black transition hover:bg-neutral-300 md:w-fit"
-                >
-                  Email the Studio
-                </a>
-              </form>
             </div>
-          </div>
+          </Reveal>
         </section>
       </main>
 
-      <footer className="border-t border-white/10 px-6 py-8 text-sm text-text-muted">
-        <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3">
-          <p className="font-bold text-foreground">Harmony Hill Studio</p>
-          <div className="flex flex-wrap items-center gap-3">
+      <footer className="relative overflow-hidden border-t border-white/10 px-6 py-12">
+        <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
+            <Image
+              src="/assets/harmony-hill-logo-clean.png"
+              alt="Harmony Hill"
+              width={36}
+              height={36}
+              className="size-8 object-contain brightness-150"
+            />
+            <div>
+              <p className="font-display text-base font-semibold">Harmony Hill</p>
+              <p className="text-xs uppercase tracking-[0.18em] text-text-faint">
+                Recording Studio
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-6 text-sm text-text-muted">
+            <a href="#services" className="transition hover:text-foreground">
+              Services
+            </a>
+            <a href="#booking" className="transition hover:text-foreground">
+              Booking
+            </a>
             <a
               href={instagramUrl}
               target="_blank"
@@ -247,7 +329,7 @@ export default function Home() {
             >
               Instagram
             </a>
-            <p>Open 24/7 - {new Date().getFullYear()}</p>
+            <p className="text-text-faint">Open 24/7 · {new Date().getFullYear()}</p>
           </div>
         </div>
       </footer>
