@@ -29,6 +29,8 @@ const steps = [
   "Submit your request and the session locks into the calendar.",
 ];
 
+const instagramUrl = "https://www.instagram.com/hharmonyhill/";
+
 export default function Home() {
   return (
     <div className="min-h-screen overflow-hidden bg-background text-foreground">
@@ -51,6 +53,14 @@ export default function Home() {
             </a>
             <a href="#contact" className="transition hover:text-foreground">
               Contact
+            </a>
+            <a
+              href={instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition hover:text-foreground"
+            >
+              Instagram
             </a>
           </nav>
           <a
@@ -95,6 +105,14 @@ export default function Home() {
               className="rounded-full border border-white/25 px-6 py-3 font-bold transition hover:bg-white hover:text-black"
             >
               View Services
+            </a>
+            <a
+              href={instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full border border-white/25 px-6 py-3 font-bold transition hover:bg-white hover:text-black"
+            >
+              Instagram
             </a>
           </div>
           <div className="mt-10 grid w-full gap-3 text-sm text-text-muted sm:grid-cols-3">
@@ -175,8 +193,17 @@ export default function Home() {
                 </h2>
                 <p className="mt-4 leading-8 text-text-muted">
                   Share your project scope, target timeline, references, and
-                  preferred service. For direct help, email the studio.
+                  preferred service. For updates and studio content, follow
+                  @hharmonyhill on Instagram.
                 </p>
+                <a
+                  href={instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-5 inline-flex rounded-full border border-white/25 px-5 py-2 text-sm font-bold transition hover:bg-white hover:text-black"
+                >
+                  @hharmonyhill
+                </a>
               </div>
               <form className="grid gap-4 md:grid-cols-2">
                 <input
@@ -211,7 +238,17 @@ export default function Home() {
       <footer className="border-t border-white/10 px-6 py-8 text-sm text-text-muted">
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3">
           <p className="font-bold text-foreground">Harmony Hill Studio</p>
-          <p>Open 24/7 - {new Date().getFullYear()}</p>
+          <div className="flex flex-wrap items-center gap-3">
+            <a
+              href={instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition hover:text-foreground"
+            >
+              Instagram
+            </a>
+            <p>Open 24/7 - {new Date().getFullYear()}</p>
+          </div>
         </div>
       </footer>
     </div>
