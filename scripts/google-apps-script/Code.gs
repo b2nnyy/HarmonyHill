@@ -6,6 +6,8 @@
  * - CALENDAR_ID: target Google Calendar ID for bookings.
  */
 const LEAD_TIME_HOURS = 2;
+const MIN_BOOKING_HOURS = 1;
+const MAX_BOOKING_HOURS = 12;
 
 function getCalendar_() {
   const calendarId = PropertiesService.getScriptProperties().getProperty(
@@ -90,6 +92,15 @@ function doPost(e) {
     }
     if (start >= end) {
       throw new Error("Start must be before end.");
+    }
+
+    const durationHours = (end.getTime() - start.getTime()) / (60 * 60 * 1000);
+    if (
+      durationHours < MIN_BOOKING_HOURS ||
+      durationHours > MAX_BOOKING_HOURS ||
+      durationHours % 1 !== 0
+    ) {
+      throw new Error("Bookings must be for 1 to 12 whole hours.");
     }
 
     const now = new Date();

@@ -1,7 +1,16 @@
 "use client";
 
-import { HOURLY_RATE, SERVICES, formatMoney, getBookingTotal } from "@/lib/booking";
+import {
+  HOURLY_RATE,
+  LEAD_TIME_HOURS,
+  MAX_BOOKING_HOURS,
+  MIN_BOOKING_HOURS,
+  SERVICES,
+  formatMoney,
+} from "@/lib/booking";
 import type { ServiceType } from "@/lib/booking";
+
+const STUDIO_TIME_ZONE = "America/New_York";
 
 type BookingFormProps = {
   selectedStart: Date | null;
@@ -28,6 +37,8 @@ function formatDateTime(value: Date | null) {
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
+    timeZone: STUDIO_TIME_ZONE,
+    timeZoneName: "short",
   }).format(value);
 }
 
@@ -48,7 +59,7 @@ export function BookingForm({
   const selectedEnd = selectedStart
     ? new Date(selectedStart.getTime() + durationHours * 60 * 60 * 1000)
     : null;
-  const total = selectedStart ? getBookingTotal(selectedStart, selectedEnd!) : 0;
+  const total = durationHours * HOURLY_RATE;
   const isSuccess = statusMessage?.toLowerCase().includes("confirmed");
   const isWarning =
     statusMessage &&
@@ -63,7 +74,8 @@ export function BookingForm({
       <p className="section-kicker">Session Request</p>
       <h3 className="mt-2 text-2xl font-black tracking-[-0.04em]">Book Your Session</h3>
       <p className="mt-2 text-sm leading-6 text-text-muted">
-        $45 per hour. Sessions require at least 2 hours lead time before start.
+        $45 per hour. Select your hours on the calendar or adjust the session length
+        here. Book at least {LEAD_TIME_HOURS} hours before the session starts.
       </p>
 
       <form className="mt-6 space-y-4" onSubmit={onSubmit}>
@@ -114,19 +126,25 @@ export function BookingForm({
           </label>
           <label className="space-y-1">
             <span className="text-xs font-bold uppercase tracking-[0.14em] text-text-muted">
-              Duration
+              Session Length
             </span>
             <select
               value={durationHours}
               onChange={(event) => onDurationChange(Number(event.target.value))}
               className="w-full rounded-2xl px-4 py-3"
             >
-              {Array.from({ length: 8 }, (_, index) => index + 1).map((hours) => (
-                <option key={hours} value={hours}>
-                  {hours} hour{hours > 1 ? "s" : ""}
-                </option>
-              ))}
+              {Array.from(
+                { length: MAX_BOOKING_HOURS - MIN_BOOKING_HOURS + 1 },
+                (_, index) => MIN_BOOKING_HOURS + index,
+              ).map((hours) => (
+                  <option key={hours} value={hours}>
+                    {hours} hour{hours > 1 ? "s" : ""}
+                  </option>
+                ))}
             </select>
+            <span className="block text-xs leading-5 text-text-muted">
+              This updates automatically when you select hours on the calendar.
+            </span>
           </label>
         </div>
 
@@ -156,9 +174,12 @@ export function BookingForm({
               Estimated Total
             </p>
             <p className="mt-1 text-4xl font-black tracking-[-0.05em] text-accent-warm">
-              {selectedStart ? formatMoney(total) : "$0"}
+              {formatMoney(total)}
             </p>
-            <p className="text-xs text-text-muted">Rate: {formatMoney(HOURLY_RATE)}/hour</p>
+            <p className="text-xs text-text-muted">
+              {durationHours} hour{durationHours > 1 ? "s" : ""} x{" "}
+              {formatMoney(HOURLY_RATE)}/hour
+            </p>
           </div>
         </div>
 

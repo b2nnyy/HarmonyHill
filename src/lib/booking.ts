@@ -1,4 +1,7 @@
 export const HOURLY_RATE = 45;
+export const MIN_BOOKING_HOURS = 1;
+export const MAX_BOOKING_HOURS = 12;
+export const LEAD_TIME_HOURS = 2;
 
 export const SERVICES = ["vocal tracking", "mixing", "mastering"] as const;
 
@@ -60,7 +63,7 @@ export function getBookingTotal(start: Date, end: Date) {
 }
 
 export function isWithinLeadTime(start: Date, now: Date = new Date()) {
-  const leadMs = 2 * 60 * 60 * 1000;
+  const leadMs = LEAD_TIME_HOURS * 60 * 60 * 1000;
   return start.getTime() - now.getTime() < leadMs;
 }
 

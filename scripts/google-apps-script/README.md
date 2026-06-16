@@ -48,5 +48,6 @@ Restart dev server after adding env vars.
 ## Rules enforced server-side
 
 - Bookings must be created at least 2 hours ahead of start time.
+- Bookings must be for 1 to 12 whole hours.
 - Overlapping times are rejected.
 - Events are written directly to your calendar.

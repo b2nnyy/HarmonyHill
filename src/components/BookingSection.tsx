@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { BookingCalendar } from "@/components/BookingCalendar";
 import { BookingForm } from "@/components/BookingForm";
 import {
+  MIN_BOOKING_HOURS,
   SERVICES,
   createBooking,
   fetchAvailability,
@@ -37,7 +38,7 @@ export function BookingSection() {
   const [weekStart, setWeekStart] = useState<Date>(() => getStartOfWeek(new Date()));
   const [events, setEvents] = useState<AvailabilityEvent[]>([]);
   const [selectedStart, setSelectedStart] = useState<Date | null>(null);
-  const [durationHours, setDurationHours] = useState(2);
+  const [durationHours, setDurationHours] = useState(MIN_BOOKING_HOURS);
   const [service, setService] = useState<ServiceType>(SERVICES[0]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -58,6 +59,8 @@ export function BookingSection() {
     end.setDate(weekStart.getDate() + 7);
     return end;
   }, [weekStart]);
+  const currentWeekStart = getStartOfWeek(new Date());
+  const canGoPrevious = weekStart.getTime() > currentWeekStart.getTime();
 
   const loadAvailability = useCallback(async () => {
     if (!API_BASE_URL) {
@@ -160,8 +163,10 @@ export function BookingSection() {
         <div className="glass-panel flex flex-wrap items-center gap-2 rounded-2xl p-2">
           <button
             type="button"
-            className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold transition hover:bg-white/10"
+            disabled={!canGoPrevious}
+            className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
             onClick={() => {
+              if (!canGoPrevious) return;
               const previous = new Date(weekStart);
               previous.setDate(previous.getDate() - 7);
               setWeekStart(previous);
@@ -198,9 +203,10 @@ export function BookingSection() {
           weekStart={weekStart}
           events={events}
           selectedStart={selectedStart}
-          selectedEnd={selectedEnd}
-          onSelectSlot={(slotStart) => {
+          durationHours={durationHours}
+          onSelectBlock={(slotStart, nextDurationHours) => {
             setSelectedStart(slotStart);
+            setDurationHours(nextDurationHours);
             setStatusMessage(null);
           }}
         />
