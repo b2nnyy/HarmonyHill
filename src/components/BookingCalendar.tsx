@@ -15,6 +15,11 @@ type BookingCalendarProps = {
 function formatDayLabel(day: Date) {
   return new Intl.DateTimeFormat("en-US", {
     weekday: "short",
+  }).format(day);
+}
+
+function formatDayDate(day: Date) {
+  return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
   }).format(day);
@@ -45,26 +50,50 @@ export function BookingCalendar({
   onSelectSlot,
 }: BookingCalendarProps) {
   const weekDays = getWeekDays(weekStart);
+  const legend = [
+    { label: "Available", className: "bg-[var(--slot-open)]" },
+    { label: "Booked", className: "bg-danger" },
+    { label: "2h rule", className: "bg-[var(--slot-muted)]" },
+    { label: "Selected", className: "bg-accent-warm" },
+  ];
 
   return (
     <div className="glass-panel rounded-3xl p-4 md:p-5">
-      <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-xl font-semibold md:text-2xl">Studio Availability (24/7)</h3>
-        <p className="text-sm text-text-muted">
-          Green = Available, Red = Unavailable, Gray = Under 2h
-        </p>
+      <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="section-kicker">Live Calendar</p>
+          <h3 className="mt-2 text-2xl font-black tracking-[-0.04em]">
+            Studio Availability
+          </h3>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {legend.map((item) => (
+            <span
+              key={item.label}
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-bold text-text-muted"
+            >
+              <span className={`size-2.5 rounded-full ${item.className}`} />
+              {item.label}
+            </span>
+          ))}
+        </div>
       </div>
-      <div className="max-h-[640px] overflow-auto rounded-2xl border border-white/10 bg-[#0a1220]">
+      <div className="max-h-[650px] overflow-auto rounded-[1.35rem] border border-white/10 bg-black/30 p-1 shadow-inner shadow-black/40">
         <div className="booking-grid">
-          <div className="booking-grid-header bg-panel-alt p-2 text-center text-xs font-semibold text-text-muted">
+          <div className="booking-grid-header booking-corner rounded-xl bg-panel-alt p-3 text-center text-xs font-black uppercase tracking-[0.12em] text-text-muted">
             Time
           </div>
           {weekDays.map((day) => (
             <div
               key={day.toISOString()}
-              className="booking-grid-header bg-panel-alt p-2 text-center text-xs font-semibold text-text-muted"
+              className="booking-grid-header rounded-xl bg-panel-alt p-3 text-center"
             >
-              {formatDayLabel(day)}
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-foreground">
+                {formatDayLabel(day)}
+              </p>
+              <p className="mt-1 text-[11px] font-semibold text-text-muted">
+                {formatDayDate(day)}
+              </p>
             </div>
           ))}
 
@@ -72,7 +101,7 @@ export function BookingCalendar({
             <Fragment key={`row-${hour}`}>
               <div
                 key={`time-${hour}`}
-                className="booking-hour-label bg-panel-alt p-2 text-center text-xs text-text-muted"
+                className="booking-hour-label rounded-xl bg-panel-alt p-3 text-center text-[11px] font-bold text-text-muted"
               >
                 {formatHour(hour)}
               </div>
@@ -94,24 +123,22 @@ export function BookingCalendar({
                   slotStart.getTime() >= selectedStart.getTime() &&
                   slotStart.getTime() < selectedEnd.getTime();
 
-                const baseClass =
-                  "min-h-12 border border-black/10 p-1 text-[11px] font-medium transition-colors";
                 const stateClass = booked
-                  ? "bg-danger/35 text-white/90 cursor-not-allowed"
+                  ? "slot-booked"
                   : tooSoon
-                    ? "bg-white/10 text-text-muted cursor-not-allowed"
-                    : "bg-accent/50 text-[#06281b] hover:bg-accent/70 cursor-pointer";
-                const selectedClass = selected
-                  ? "ring-2 ring-accent-strong ring-inset"
-                  : "";
+                    ? "slot-soon"
+                    : "slot-available";
+                const selectedClass = selected && !booked && !tooSoon ? "slot-selected" : "";
+                const label = booked ? "Booked" : tooSoon ? "2h rule" : "Open";
 
                 return (
                   <button
                     key={`${day.toISOString()}-${hour}`}
                     type="button"
-                    className={`${baseClass} ${stateClass} ${selectedClass}`}
+                    className={`calendar-slot ${stateClass} ${selectedClass}`}
                     disabled={booked || tooSoon}
                     onClick={() => onSelectSlot(slotStart)}
+                    aria-label={`${label} at ${formatHour(hour)} on ${formatDayLabel(day)} ${formatDayDate(day)}`}
                     title={
                       booked
                         ? "Unavailable - booked"
@@ -120,7 +147,10 @@ export function BookingCalendar({
                           : "Available"
                     }
                   >
-                    {booked ? "Booked" : tooSoon ? "2h rule" : "Open"}
+                    <span className="block">{label}</span>
+                    <span className="mt-1 block text-[10px] font-semibold opacity-75">
+                      {formatHour(hour)}
+                    </span>
                   </button>
                 );
               })}

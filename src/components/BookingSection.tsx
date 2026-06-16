@@ -23,6 +23,16 @@ function getStartOfWeek(date: Date) {
   return weekStart;
 }
 
+function formatWeekRange(start: Date, end: Date) {
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+  const visibleEnd = new Date(end);
+  visibleEnd.setDate(visibleEnd.getDate() - 1);
+  return `${formatter.format(start)} - ${formatter.format(visibleEnd)}`;
+}
+
 export function BookingSection() {
   const [weekStart, setWeekStart] = useState<Date>(() => getStartOfWeek(new Date()));
   const [events, setEvents] = useState<AvailabilityEvent[]>([]);
@@ -138,40 +148,50 @@ export function BookingSection() {
     <section id="booking" className="mx-auto w-full max-w-6xl px-6 py-16">
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-accent">Booking</p>
-          <h2 className="mt-2 text-3xl font-bold md:text-4xl">Book a Studio Session</h2>
-          <p className="mt-3 text-text-muted">
+          <p className="section-kicker">Booking</p>
+          <h2 className="mt-3 text-4xl font-black tracking-[-0.05em] md:text-5xl">
+            Book a Studio Session
+          </h2>
+          <p className="mt-4 max-w-2xl leading-8 text-text-muted">
             Harmony Hill is open 24/7. Select an open start time, pick duration,
             and lock in your session.
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="glass-panel flex flex-wrap items-center gap-2 rounded-2xl p-2">
           <button
             type="button"
-            className="rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-sm transition hover:bg-white/10"
+            className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold transition hover:bg-white/10"
             onClick={() => {
               const previous = new Date(weekStart);
               previous.setDate(previous.getDate() - 7);
               setWeekStart(previous);
             }}
           >
-            Previous Week
+            Prev
           </button>
+          <p className="min-w-32 px-3 text-center text-sm font-black text-foreground">
+            {formatWeekRange(weekStart, weekEnd)}
+          </p>
           <button
             type="button"
-            className="rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-sm transition hover:bg-white/10"
+            className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold transition hover:bg-white/10"
             onClick={() => {
               const next = new Date(weekStart);
               next.setDate(next.getDate() + 7);
               setWeekStart(next);
             }}
           >
-            Next Week
+            Next
           </button>
         </div>
       </div>
 
-      {loading ? <p className="mb-3 text-sm text-text-muted">Loading availability...</p> : null}
+      {loading ? (
+        <div className="mb-4 inline-flex items-center gap-3 rounded-full border border-accent/20 bg-accent/10 px-4 py-2 text-sm font-bold text-accent">
+          <span className="size-2 animate-pulse rounded-full bg-accent" />
+          Loading live availability
+        </div>
+      ) : null}
 
       <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
         <BookingCalendar

@@ -1,14 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --background: #04070d;
-  --foreground: #edf1f7;
-  --panel: #0f1728;
-  --panel-alt: #17223a;
-  --text-muted: #95a6c1;
-  --accent: #8fe8c9;
-  --accent-strong: #46cf9f;
-  --danger: #ff6f88;
+  --background: #030407;
+  --foreground: #f2efe8;
+  --panel: #0c111c;
+  --panel-alt: #141c2b;
+  --text-muted: #9ba8b8;
+  --accent: #a7f0d1;
+  --accent-strong: #58d99f;
+  --accent-warm: #d5b574;
+  --danger: #ff4d64;
+  --danger-deep: #671923;
+  --slot-open: #7ee3b8;
+  --slot-selected: #d5b574;
+  --slot-muted: #303948;
 }
 
 @theme inline {
@@ -19,6 +24,7 @@
   --color-text-muted: var(--text-muted);
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
+  --color-accent-warm: var(--accent-warm);
   --color-danger: var(--danger);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -29,8 +35,23 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   background-image:
-    radial-gradient(circle at 18% 8%, rgba(70, 207, 159, 0.14), transparent 34%),
-    linear-gradient(180deg, #03050a 0%, #050a13 40%, #04070d 100%);
+    radial-gradient(circle at 12% 6%, rgba(167, 240, 209, 0.16), transparent 30%),
+    radial-gradient(circle at 88% 10%, rgba(213, 181, 116, 0.1), transparent 28%),
+    radial-gradient(circle at 50% 95%, rgba(88, 217, 159, 0.1), transparent 36%),
+    linear-gradient(180deg, #020305 0%, #07101b 42%, #030407 100%);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(to bottom, black 0%, transparent 72%);
 }
 
 a {
@@ -41,8 +62,9 @@ input,
 select,
 textarea {
   color: var(--foreground);
-  background: rgba(8, 13, 24, 0.85);
-  border: 1px solid rgba(152, 171, 201, 0.28);
+  background: rgba(5, 9, 16, 0.86);
+  border: 1px solid rgba(180, 194, 214, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 input::placeholder,
@@ -53,20 +75,42 @@ textarea::placeholder {
 input:focus,
 select:focus,
 textarea:focus {
-  outline: 2px solid rgba(143, 232, 201, 0.32);
+  outline: 2px solid rgba(167, 240, 209, 0.42);
   outline-offset: 1px;
 }
 
 .glass-panel {
   background: linear-gradient(
     145deg,
-    rgba(16, 25, 42, 0.9) 0%,
-    rgba(11, 17, 30, 0.92) 100%
+    rgba(19, 26, 39, 0.9) 0%,
+    rgba(8, 12, 20, 0.94) 48%,
+    rgba(7, 10, 15, 0.97) 100%
   );
-  border: 1px solid rgba(142, 161, 195, 0.2);
+  border: 1px solid rgba(213, 181, 116, 0.16);
   box-shadow:
-    0 24px 80px rgba(4, 7, 14, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    0 28px 90px rgba(0, 0, 0, 0.56),
+    inset 0 1px 0 rgba(255, 255, 255, 0.055);
+}
+
+.hero-panel {
+  background:
+    linear-gradient(135deg, rgba(13, 18, 29, 0.74), rgba(3, 5, 8, 0.98)),
+    radial-gradient(circle at 70% 22%, rgba(167, 240, 209, 0.14), transparent 30%),
+    radial-gradient(circle at 20% 82%, rgba(213, 181, 116, 0.12), transparent 28%);
+}
+
+.premium-button {
+  box-shadow:
+    0 12px 30px rgba(88, 217, 159, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.section-kicker {
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
 }
 
 .soft-grid {
@@ -79,24 +123,39 @@ textarea:focus {
 
 .logo-stage {
   position: relative;
-  width: min(62vw, 300px);
+  width: min(68vw, 340px);
   aspect-ratio: 1 / 1;
   margin: 0 auto;
-  perspective: 1400px;
+  perspective: 1500px;
+  transform: translateZ(0);
 }
 
-.logo-stage::before {
-  content: "";
+.logo-orbit,
+.logo-aura {
   position: absolute;
-  inset: 20%;
+  pointer-events: none;
+}
+
+.logo-orbit {
+  inset: 7%;
+  border: 1px solid rgba(213, 181, 116, 0.22);
+  border-radius: 999px;
+  transform: rotateX(68deg) rotateZ(-18deg);
+  box-shadow:
+    0 0 26px rgba(213, 181, 116, 0.1),
+    inset 0 0 22px rgba(167, 240, 209, 0.05);
+}
+
+.logo-aura {
+  inset: 17%;
   border-radius: 999px;
   background: radial-gradient(
     circle at center,
-    rgba(70, 207, 159, 0.22) 0%,
-    rgba(70, 207, 159, 0.04) 32%,
+    rgba(167, 240, 209, 0.24) 0%,
+    rgba(167, 240, 209, 0.08) 36%,
     transparent 70%
   );
-  filter: blur(10px);
+  filter: blur(14px);
 }
 
 .logo-spin {
@@ -104,7 +163,7 @@ textarea:focus {
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  animation: logoSpin 22s linear infinite;
+  animation: logoSpin 26s linear infinite;
 }
 
 .logo-layer {
@@ -114,19 +173,43 @@ textarea:focus {
   height: 100%;
   object-fit: contain;
   border-radius: 24px;
-  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.34));
   backface-visibility: hidden;
+}
+
+.logo-rim {
+  position: absolute;
+  top: 18%;
+  bottom: 18%;
+  width: 18px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to bottom,
+    rgba(213, 181, 116, 0),
+    rgba(213, 181, 116, 0.2),
+    rgba(167, 240, 209, 0.24),
+    rgba(213, 181, 116, 0)
+  );
+  filter: blur(10px);
+  transform: translateZ(-8px);
+}
+
+.logo-rim-left {
+  left: 17%;
+}
+
+.logo-rim-right {
+  right: 17%;
 }
 
 @keyframes logoSpin {
   0% {
-    transform: rotateX(12deg) rotateY(0deg);
+    transform: rotateX(10deg) rotateY(0deg) rotateZ(-1deg);
   }
   50% {
-    transform: rotateX(12deg) rotateY(180deg);
+    transform: rotateX(10deg) rotateY(180deg) rotateZ(1deg);
   }
   100% {
-    transform: rotateX(12deg) rotateY(360deg);
+    transform: rotateX(10deg) rotateY(360deg) rotateZ(-1deg);
   }
 }
 
@@ -138,24 +221,104 @@ textarea:focus {
 
 .booking-grid {
   display: grid;
-  grid-template-columns: 80px repeat(7, minmax(120px, 1fr));
-  gap: 2px;
+  grid-template-columns: 82px repeat(7, minmax(128px, 1fr));
+  gap: 3px;
+  padding: 4px;
 }
 
 .booking-grid-header {
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: 3;
 }
 
 .booking-hour-label {
   position: sticky;
   left: 0;
-  z-index: 1;
+  z-index: 2;
+}
+
+.booking-corner {
+  left: 0;
+  z-index: 4;
+}
+
+.calendar-slot {
+  min-height: 58px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.45rem 0.45rem;
+  text-align: left;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.1;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background 160ms ease;
+}
+
+.calendar-slot:focus-visible {
+  outline: 2px solid rgba(213, 181, 116, 0.72);
+  outline-offset: 2px;
+}
+
+.slot-available {
+  color: #042417;
+  background:
+    linear-gradient(145deg, rgba(167, 240, 209, 0.98), rgba(88, 217, 159, 0.7)),
+    radial-gradient(circle at 18% 15%, rgba(255, 255, 255, 0.52), transparent 22%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.34);
+  cursor: pointer;
+}
+
+.slot-available:hover {
+  transform: translateY(-2px);
+  border-color: rgba(213, 181, 116, 0.52);
+  box-shadow:
+    0 12px 28px rgba(88, 217, 159, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.slot-booked {
+  color: #ffe4e8;
+  cursor: not-allowed;
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.08) 0,
+      rgba(255, 255, 255, 0.08) 6px,
+      transparent 6px,
+      transparent 12px
+    ),
+    linear-gradient(145deg, rgba(255, 77, 100, 0.78), rgba(103, 25, 35, 0.95));
+  border-color: rgba(255, 77, 100, 0.42);
+}
+
+.slot-soon {
+  color: #c1c9d6;
+  cursor: not-allowed;
+  background: linear-gradient(145deg, rgba(48, 57, 72, 0.76), rgba(18, 24, 35, 0.92));
+}
+
+.slot-selected {
+  color: #130f08;
+  background:
+    linear-gradient(145deg, rgba(236, 204, 130, 0.98), rgba(213, 181, 116, 0.82)),
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.45), transparent 24%);
+  border-color: rgba(255, 235, 176, 0.8);
+  box-shadow:
+    0 0 0 2px rgba(213, 181, 116, 0.32),
+    0 12px 30px rgba(213, 181, 116, 0.18);
 }
 
 @media (max-width: 900px) {
   .booking-grid {
-    grid-template-columns: 70px repeat(7, minmax(90px, 1fr));
+    grid-template-columns: 72px repeat(7, minmax(104px, 1fr));
+  }
+
+  .calendar-slot {
+    min-height: 52px;
   }
 }
