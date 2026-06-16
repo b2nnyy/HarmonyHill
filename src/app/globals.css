@@ -48,7 +48,7 @@
   --color-silver-400: var(--silver-400);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-display: var(--font-display);
+  --font-display: var(--font-geist-sans);
 }
 
 * {
@@ -88,14 +88,7 @@ body::before {
 
 /* Fine film grain for a premium, printed feel */
 body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0.05;
-  mix-blend-mode: screen;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  display: none;
 }
 
 a {
@@ -104,7 +97,7 @@ a {
 
 /* ---------- Typography helpers ---------- */
 .font-display {
-  font-family: var(--font-display), Georgia, "Times New Roman", serif;
+  font-family: var(--font-display), Arial, Helvetica, sans-serif;
 }
 
 .section-kicker {
@@ -131,7 +124,7 @@ a {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: foilShift 9s ease-in-out infinite;
+  animation: none;
 }
 
 @keyframes foilShift {
@@ -166,7 +159,7 @@ a {
   box-shadow:
     0 1px 0 0 rgba(255, 255, 255, 0.04) inset,
     0 30px 60px -40px rgba(0, 0, 0, 0.9);
-  backdrop-filter: blur(8px);
+  backdrop-filter: none;
 }
 
 .panel-quiet {
@@ -322,7 +315,7 @@ select option {
   inset: -6%;
   border-radius: 999px;
   border: 1px dashed rgba(255, 255, 255, 0.14);
-  animation: ringSpin 60s linear infinite;
+  animation: none;
 }
 
 .logo-mark {
@@ -347,7 +340,7 @@ select option {
   pointer-events: none;
   opacity: 0.05;
   filter: grayscale(1) brightness(1.6);
-  animation: motifDrift 80s linear infinite;
+  animation: none;
   z-index: 0;
 }
 
@@ -384,7 +377,7 @@ select option {
   gap: 2.5rem;
   padding-right: 2.5rem;
   white-space: nowrap;
-  animation: marqueeScroll 38s linear infinite;
+  animation: marqueeScroll 70s linear infinite;
 }
 
 @keyframes marqueeScroll {
@@ -411,17 +404,10 @@ select option {
 
 /* ---------- Scroll reveal ---------- */
 .reveal {
-  opacity: 0;
-  transform: translateY(22px);
-  transition:
-    opacity 700ms cubic-bezier(0.2, 0.7, 0.2, 1),
-    transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
-  will-change: opacity, transform;
-}
-
-.reveal.is-visible {
   opacity: 1;
   transform: none;
+  transition: none;
+  will-change: auto;
 }
 
 /* ---------- Calendar slots ---------- */
@@ -507,9 +493,18 @@ select option {
   .marquee__track {
     animation: none;
   }
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
+}
+
+@media (max-width: 900px) {
+  .motif-ornament {
+    display: none;
+  }
+
+  .marquee {
+    mask-image: none;
+  }
+
+  .marquee__track {
+    animation: none;
   }
 }

@@ -180,10 +180,6 @@ export default function Home() {
             {services.map((service, index) => (
               <Reveal key={service.title} delay={index * 90}>
                 <article className="glass-panel edge-hover group relative h-full overflow-hidden p-7">
-                  <MotifOrnament
-                    className="right-[-30%] top-[-30%] opacity-[0.04]"
-                    size={260}
-                  />
                   <div className="relative z-10 flex items-baseline justify-between">
                     <span className="font-display text-5xl font-light text-white/15 transition group-hover:text-white/30">
                       0{index + 1}
@@ -241,10 +237,6 @@ export default function Home() {
         <section id="contact" className="mx-auto w-full max-w-6xl px-6 py-24">
           <Reveal>
             <div className="glass-panel relative overflow-hidden p-8 md:p-12">
-              <MotifOrnament
-                className="bottom-[-35%] right-[-12%] opacity-[0.05]"
-                size={460}
-              />
               <div className="relative z-10 grid gap-10 lg:grid-cols-[0.85fr_1.15fr]">
                 <div>
                   <p className="section-kicker">Contact</p>
